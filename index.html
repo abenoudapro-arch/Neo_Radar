@@ -1,263 +1,140 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>néo Radar DMR 2025</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>néo Radar DMR 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#2563eb;--blue-dk:#1e40af;--green:#10b981;--green-dk:#059669;--orange:#f59e0b;--red:#ef4444;--red-dk:#dc2626;--bg:#f0f4f8;--card:#fff;--ink:#1f2937;--gray:#9ca3af;--shadow:0 2px 10px rgba(0,0,0,.08)}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
-.app{display:grid;grid-template-columns:200px 1fr;grid-template-rows:60px 50px calc(100vh - 110px)}
-.side{grid-row:1/span 3;background:linear-gradient(180deg,#f9fafb 0%,#e5e7eb 100%);border-right:2px solid #d1d5db;padding:14px;display:flex;flex-direction:column;gap:8px}
-.logo{font-weight:900;font-size:20px;color:var(--blue);margin-bottom:8px}
-.logo .radar{color:var(--green)}
-.badge{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;border-radius:20px;padding:3px 10px;font-weight:900;font-size:11px;display:inline-block}
-.stitle{font-size:10px;font-weight:900;color:#6b7280;margin-top:8px;letter-spacing:.8px}
-.sbtn{all:unset;display:block;padding:11px;border-radius:8px;font-weight:800;cursor:pointer;font-size:14px;transition:.2s;border-left:3px solid transparent}
-.sbtn:hover{background:#e0f2fe;color:var(--blue)}
-.sbtn.active{background:linear-gradient(90deg,#dbeafe,#d1fae5);color:var(--blue);border-left:3px solid var(--green);font-weight:900}
-.top{grid-column:2;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:linear-gradient(135deg,var(--blue),var(--blue-dk));color:#fff;box-shadow:var(--shadow)}
-.top .brand{font-size:20px;font-weight:900}
-.bar{grid-column:2;background:#fff;border-bottom:2px solid #e5e7eb;display:flex;align-items:center;gap:10px;padding:0 20px}
-.filter{display:flex;align-items:center;gap:6px;background:#f3f4f6;border:1px solid #d1d5db;padding:5px 10px;border-radius:8px;color:#6b7280;font-weight:800;font-size:13px}
-.filter .v{color:#374151;font-weight:900}
-.disabled{pointer-events:none;opacity:.75}
-.reset{margin-left:auto;background:#d1d5db;color:#374151;border:none;padding:6px 12px;border-radius:8px;font-weight:900;font-size:13px}
-.canvas{grid-column:2;padding:12px;overflow:auto}
-.section{display:none}
-.section.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;align-content:start}
-.card{background:var(--card);border-radius:10px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px;border:1px solid #e5e7eb}
-.title{font-size:10px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;color:#6b7280}
-.kpi{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.val{font-size:40px;font-weight:900;color:var(--blue)}
-.val.green{color:var(--green)}.val.orange{color:var(--orange)}.val.red{color:var(--red)}
-.sub{color:#6b7280;font-weight:800;font-size:16px}
-.evo{font-weight:900;font-size:14px}
-.evo.up{color:var(--green)}.evo.down{color:var(--red)}
-.prev{color:var(--gray);font-size:12px;font-weight:700}
-.chip{background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;border-radius:8px;padding:5px 10px;font-weight:900;font-size:11px;display:inline-block}
-.click{cursor:pointer}
-.click:hover{box-shadow:0 4px 14px rgba(37,99,235,.3);transform:translateY(-2px);transition:.2s}
-.donut{width:180px;height:180px;border-radius:50%;background:conic-gradient(var(--blue) 0 35%,var(--green) 35% 77%,var(--orange) 77% 100%);position:relative;flex-shrink:0}
-.hole{position:absolute;inset:40px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;color:var(--ink)}
-.legend{display:flex;flex-direction:column;gap:10px}
-.leg{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border-radius:8px;cursor:pointer;background:#f9fafb;border:1px solid #e5e7eb;transition:.2s}
-.leg:hover{background:#dbeafe;border-color:var(--blue)}
-.lc{width:14px;height:14px;border-radius:3px}
-.lv{font-weight:900;font-size:16px;color:var(--ink)}
-.pbar{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden;position:relative}
-.pfill{height:100%;background:linear-gradient(90deg,var(--green),var(--green-dk));border-radius:999px}
-.mini{font-size:11px;font-weight:800;color:#6b7280}
-.ov{position:fixed;inset:0;background:rgba(31,41,55,.5);display:none;align-items:center;justify-content:center;z-index:50;cursor:pointer}
-.ov.show{display:flex}
-.panel{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.3);padding:24px;width:560px;max-height:80vh;overflow:auto;cursor:default}
-.list{width:920px}
-.head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.head h3{margin:0;font-size:19px;font-weight:900}
-.close{margin-left:auto;all:unset;background:linear-gradient(135deg,var(--blue),var(--green));color:#fff;padding:6px 14px;border-radius:8px;font-weight:900;cursor:pointer;font-size:13px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:left}
-tr:hover{background:#f9fafb}
-.tip{position:fixed;display:none;background:#1f2937;color:#fff;padding:10px 12px;border-radius:8px;font-size:11px;max-width:320px;z-index:200;white-space:pre-wrap;box-shadow:0 4px 14px rgba(0,0,0,.4)}
-.big{grid-column:1/-1}
-.sec-title{font-size:13px;font-weight:900;color:var(--blue);margin:10px 0 8px 0;padding:8px 12px;background:linear-gradient(90deg,#dbeafe,#d1fae5);border-radius:8px;border-left:4px solid var(--green)}
-@media(max-width:768px){.app{grid-template-columns:1fr;grid-template-rows:60px 50px auto}.side{display:none}.canvas{padding:8px}.section.active{grid-template-columns:1fr}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#1e293b;overflow-x:hidden}
+.wrap{display:grid;grid-template-columns:220px 1fr;grid-template-rows:70px 1fr;height:100vh}
+.side{grid-row:1/3;background:linear-gradient(180deg,#1e40af,#2563eb);padding:20px;color:#fff}
+.logo{font-size:22px;font-weight:900;margin-bottom:30px}
+.logo .r{color:#10b981}
+.nav{display:flex;flex-direction:column;gap:12px}
+.nav button{all:unset;padding:14px;background:rgba(255,255,255,.1);border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;transition:.2s;border-left:4px solid transparent}
+.nav button:hover{background:rgba(255,255,255,.2)}
+.nav button.active{background:#10b981;border-left:4px solid #fff}
+.head{background:linear-gradient(90deg,#2563eb,#1e40af);color:#fff;padding:0 30px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.head h1{font-size:24px;font-weight:900}
+.filters{display:flex;gap:10px}
+.chip{background:rgba(255,255,255,.2);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700}
+.main{padding:20px;overflow-y:auto}
+.sec{display:none}
+.sec.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:.2s;border-left:4px solid #2563eb}
+.card:hover{box-shadow:0 6px 20px rgba(0,0,0,.15);transform:translateY(-3px)}
+.card.big{grid-column:1/-1}
+.label{font-size:11px;font-weight:800;text-transform:uppercase;color:#64748b;letter-spacing:1px;margin-bottom:8px}
+.num{font-size:48px;font-weight:900;color:#2563eb;line-height:1}
+.num.green{color:#10b981}
+.num.orange{color:#f59e0b}
+.num.red{color:#ef4444}
+.evo{font-size:16px;font-weight:800;margin-top:8px}
+.evo.up{color:#10b981}
+.evo.down{color:#ef4444}
+.prev{font-size:13px;color:#94a3b8;margin-top:6px}
+.badge{display:inline-block;background:linear-gradient(135deg,#2563eb,#10b981);color:#fff;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;margin-right:8px}
+.bar{height:14px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:12px 0}
+.fill{height:100%;background:linear-gradient(90deg,#10b981,#059669);border-radius:20px}
+.donut{width:200px;height:200px;border-radius:50%;background:conic-gradient(#2563eb 0 35%,#10b981 35% 77%,#f59e0b 77%);position:relative;margin:20px auto}
+.donut::after{content:'1000';position:absolute;inset:50px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900}
+.leg{display:grid;grid-template-columns:20px 1fr auto;align-items:center;gap:12px;padding:12px;background:#f8fafc;border-radius:8px;margin-top:10px;cursor:pointer;transition:.2s}
+.leg:hover{background:#e0f2fe}
+.dot{width:20px;height:20px;border-radius:4px}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:none;align-items:center;justify-content:center;z-index:100}
+.modal.show{display:flex}
+.panel{background:#fff;border-radius:16px;padding:30px;width:90%;max-width:700px;max-height:80vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.close{background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:800;cursor:pointer;float:right}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}.side{display:none}.main{padding:12px}.sec.active{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="wrap">
 <aside class="side">
-<div class="logo">néo<span class="radar">Radar</span> <span class="badge">DMR</span></div>
-<div class="stitle">RUBRIQUES</div>
-<button class="sbtn active" onclick="showSection('synthese')">Synthèse</button>
-<button class="sbtn" onclick="showSection('comptes')">Qualité comptes</button>
-<button class="sbtn" onclick="showSection('contacts')">Qualité contacts</button>
-<button class="sbtn" onclick="showSection('vitalite')">Vitalité</button>
+<div class="logo">néo<span class="r">Radar</span></div>
+<div class="nav">
+<button class="active" onclick="show('syn')">📊 Synthèse</button>
+<button onclick="show('cpt')">📁 Qualité comptes</button>
+<button onclick="show('cnt')">👤 Qualité contacts</button>
+<button onclick="show('vit')">⚡ Vitalité</button>
+</div>
 </aside>
-<header class="top">
-<div class="brand">néo<span style="color:#10b981">Radar</span> DMR</div>
-<div id="today"></div>
+<header class="head">
+<h1>néo<span style="color:#10b981">Radar</span> DMR</h1>
+<div class="filters">
+<div class="chip">2025</div>
+<div class="chip">Tous Dpts</div>
+</div>
 </header>
-<div class="bar">
-<div class="filter disabled">Année <span class="v">2025</span></div>
-<div class="filter disabled">Département <span class="v">Tous</span></div>
-<div class="filter disabled">Réseau <span class="v">Tous</span></div>
-<button class="reset disabled">Réinitialiser</button>
-</div>
-<div class="canvas">
-<div id="synthese" class="section active">
-<div class="card big click" onclick="openScore()">
-<div class="title">Score qualité NEO DMR</div>
-<div class="kpi"><div class="val green">67</div><div class="sub">/ 100</div></div>
+<main class="main">
+<div id="syn" class="sec active">
+<div class="card big">
+<div class="label">Score qualité NEO DMR</div>
+<div class="num green">67<span style="font-size:28px;color:#64748b"> / 100</span></div>
 <div class="evo up">+9 pts vs 2024</div>
-<div class="mini">Cliquer pour détails</div>
 </div>
-<div class="card click" onclick="openList('actifs')">
-<div class="title">Comptes actifs</div>
-<div class="kpi"><div class="val">1000</div><div class="evo up">+5%</div></div>
+<div class="card">
+<div class="label">Comptes actifs</div>
+<div class="num">1000</div>
+<div class="evo up">+5%</div>
 <div class="prev">2024: 952</div>
 </div>
-<div class="card click" onclick="openList('q_yes')">
-<div class="title">Qualifiés 100%</div>
-<div class="kpi"><div class="val">620</div><div class="sub">62%</div></div>
+<div class="card">
+<div class="label">Qualifiés 100%</div>
+<div class="num">620<span style="font-size:20px;color:#64748b"> (62%)</span></div>
 <div class="prev">2024: 580 (61%)</div>
 </div>
-<div class="card click" onclick="openList('dormants')">
-<div class="title">Dormants</div>
-<div class="kpi"><div class="val orange">180</div><div class="sub">18%</div></div>
+<div class="card">
+<div class="label">Dormants</div>
+<div class="num orange">180<span style="font-size:20px;color:#64748b"> (18%)</span></div>
 <div class="prev">2024: 192 (20%)</div>
 </div>
-<div class="card click" onclick="openList('doublons')">
-<div class="title">Doublons (SIRET+CP)</div>
-<div class="kpi"><div class="val red">35</div><div class="sub">3,5%</div></div>
-<div class="prev">2024: 47 (4,9%)</div>
+<div class="card">
+<div class="label">Doublons détectés</div>
+<div class="num red">35<span style="font-size:20px;color:#64748b"> (3.5%)</span></div>
+<div class="prev">2024: 47 (4.9%)</div>
 </div>
 <div class="card big">
-<div class="title">Ventilation par typologie</div>
-<div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
-<div class="donut"><div class="hole">1000</div></div>
-<div class="legend" style="flex:1">
-<div class="leg click" onclick="openList('MOA')"><div class="lc" style="background:var(--blue)"></div><div style="flex:1;font-weight:900">Maîtrise d'ouvrage</div><div class="lv">350 <span style="color:#6b7280;font-size:14px">(35%)</span></div></div>
-<div class="leg click" onclick="openList('BET')"><div class="lc" style="background:var(--green)"></div><div style="flex:1;font-weight:900">Bureaux d'études</div><div class="lv">420 <span style="color:#6b7280;font-size:14px">(42%)</span></div></div>
-<div class="leg click" onclick="openList('CMI')"><div class="lc" style="background:var(--orange)"></div><div style="flex:1;font-weight:900">CMI</div><div class="lv">230 <span style="color:#6b7280;font-size:14px">(23%)</span></div></div>
+<div class="label">Ventilation par typologie</div>
+<div class="donut"></div>
+<div class="leg"><div class="dot" style="background:#2563eb"></div><div>Maîtrise d'ouvrage</div><div style="font-weight:900">350 (35%)</div></div>
+<div class="leg"><div class="dot" style="background:#10b981"></div><div>Bureaux d'études</div><div style="font-weight:900">420 (42%)</div></div>
+<div class="leg"><div class="dot" style="background:#f59e0b"></div><div>CMI</div><div style="font-weight:900">230 (23%)</div></div>
 </div>
 </div>
-</div>
-</div>
-<div id="comptes" class="section">
-<div class="card big click" onclick="openList('actifs')">
-<div class="title">Comptes actifs</div>
-<div class="kpi"><div class="val">1000</div><div class="evo up">+5%</div></div>
-<div class="prev">2024: 952</div>
-<div class="title" style="margin-top:10px">Mix créateurs</div>
-<div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">RPRC 45%</span><span class="chip">RPRCI 38%</span><span class="chip">IT 17%</span></div>
-</div>
-<div class="card">
-<div class="title">Adresse renseignée</div>
-<div class="kpi"><div class="val">87%</div></div>
-<div class="pbar"><div class="pfill" style="width:87%"></div></div>
-<div class="mini">Anomalies: <b>42</b> <span class="click" style="color:var(--blue);text-decoration:underline" onclick="openList('an_addr')">Voir</span></div>
-</div>
-<div class="card">
-<div class="title">Nature renseignée</div>
-<div class="kpi"><div class="val">91%</div></div>
-<div class="pbar"><div class="pfill" style="width:91%"></div></div>
-<div class="mini">Manquante: <b>28</b></div>
-</div>
-<div class="card">
-<div class="title">Type renseigné</div>
-<div class="kpi"><div class="val">93%</div></div>
-<div class="pbar"><div class="pfill" style="width:93%"></div></div>
-<div class="mini">Manquant: <b>22</b></div>
-</div>
-<div class="card">
-<div class="title">SIRET renseigné</div>
-<div class="kpi"><div class="val orange">78%</div></div>
-<div class="pbar"><div class="pfill" style="width:78%;background:linear-gradient(90deg,var(--orange),#d97706)"></div></div>
-<div class="mini">Invalide: <b>28</b></div>
-</div>
-<div class="card">
-<div class="title">Indice proximité (IP)</div>
-<div class="kpi"><div class="val orange">72%</div></div>
-<div class="pbar"><div class="pfill" style="width:72%;background:linear-gradient(90deg,var(--orange),#d97706)"></div></div>
-</div>
-<div class="card click" onclick="openList('animes')">
-<div class="title">Comptes animés (12m)</div>
-<div class="kpi"><div class="val">580</div><div class="sub">58%</div></div>
-</div>
-<div class="card">
-<div class="title">Durée moy. MAJ</div>
-<div class="kpi"><div class="val orange">8.5</div><div class="sub">mois</div></div>
-<div class="mini">Sur comptes actifs</div>
-</div>
-</div>
-<div id="contacts" class="section">
-<div class="card big click" onclick="openList('contacts_actifs')">
-<div class="title">Contacts actifs</div>
-<div class="kpi"><div class="val">3200</div><div class="evo up">+9%</div></div>
-<div class="prev">2024: 2936</div>
-</div>
-<div class="card">
-<div class="title">Email renseigné</div>
-<div class="kpi"><div class="val">88%</div></div>
-<div class="sub">2816/3200</div>
-</div>
-<div class="card">
-<div class="title">Mobile renseigné</div>
-<div class="kpi"><div class="val orange">74%</div></div>
-<div class="sub">2368/3200</div>
-</div>
-<div class="card">
-<div class="title">Fonction renseignée</div>
-<div class="kpi"><div class="val orange">68%</div></div>
-<div class="sub">2176/3200</div>
-</div>
+<div id="cpt" class="sec">
 <div class="card big">
-<div class="title">Contacts multi-comptes</div>
-<div class="kpi"><div class="val orange">5%</div><div class="sub">160 contacts</div></div>
-<div class="mini">Rattachés à 2+ comptes</div>
+<div class="label">Comptes actifs</div>
+<div class="num">1000</div>
+<div class="evo up">+5%</div>
+<div style="margin-top:15px"><span class="badge">RPRC 45%</span><span class="badge">RPRCI 38%</span><span class="badge">IT 17%</span></div>
 </div>
+<div class="card"><div class="label">Adresse renseignée</div><div class="num">87%</div><div class="bar"><div class="fill" style="width:87%"></div></div></div>
+<div class="card"><div class="label">Nature renseignée</div><div class="num">91%</div><div class="bar"><div class="fill" style="width:91%"></div></div></div>
+<div class="card"><div class="label">Type renseigné</div><div class="num">93%</div><div class="bar"><div class="fill" style="width:93%"></div></div></div>
+<div class="card"><div class="label">SIRET renseigné</div><div class="num orange">78%</div><div class="bar"><div class="fill" style="width:78%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div></div>
+<div class="card"><div class="label">Indice proximité</div><div class="num orange">72%</div><div class="bar"><div class="fill" style="width:72%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div></div>
+<div class="card"><div class="label">Comptes animés (12m)</div><div class="num">580<span style="font-size:20px;color:#64748b"> (58%)</span></div></div>
+<div class="card"><div class="label">Durée moy. MAJ</div><div class="num orange">8.5<span style="font-size:20px;color:#64748b"> mois</span></div></div>
 </div>
-<div id="vitalite" class="section">
-<div class="sec-title">COMPTES (12 mois)</div>
-<div class="card">
-<div class="title">Nouveaux comptes</div>
-<div class="kpi"><div class="val green">120</div></div>
+<div id="cnt" class="sec">
+<div class="card big"><div class="label">Contacts actifs</div><div class="num">3200</div><div class="evo up">+9%</div><div class="prev">2024: 2936</div></div>
+<div class="card"><div class="label">Email renseigné</div><div class="num">88%</div><div class="prev">2816/3200</div></div>
+<div class="card"><div class="label">Mobile renseigné</div><div class="num orange">74%</div><div class="prev">2368/3200</div></div>
+<div class="card"><div class="label">Fonction renseignée</div><div class="num orange">68%</div><div class="prev">2176/3200</div></div>
+<div class="card big"><div class="label">Contacts multi-comptes</div><div class="num orange">5%<span style="font-size:20px;color:#64748b"> (160 contacts)</span></div></div>
 </div>
-<div class="card">
-<div class="title">Comptes désactivés</div>
-<div class="kpi"><div class="val red">40</div></div>
+<div id="vit" class="sec">
+<div class="card"><div class="label">Nouveaux comptes</div><div class="num green">120</div></div>
+<div class="card"><div class="label">Comptes désactivés</div><div class="num red">40</div></div>
+<div class="card"><div class="label">Nouveaux contacts</div><div class="num green">450</div></div>
+<div class="card"><div class="label">Contacts désactivés</div><div class="num red">280</div></div>
+<div class="card big"><div class="label">Balance 12 mois</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-top:15px"><div style="background:#d1fae5;padding:20px;border-radius:12px;border-left:4px solid #10b981"><div style="font-weight:900;font-size:20px;color:#10b981">+720</div><div style="font-size:13px;color:#065f46;margin-top:5px">120 Nvx + 600 MAJ</div></div><div style="background:#fee2e2;padding:20px;border-radius:12px;border-left:4px solid #ef4444"><div style="font-weight:900;font-size:20px;color:#ef4444">-120</div><div style="font-size:13px;color:#991b1b;margin-top:5px">40 Désac + 80 Dormants</div></div><div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:20px;border-radius:12px;text-align:center"><div style="font-size:14px;font-weight:800;opacity:.9">BALANCE</div><div style="font-size:40px;font-weight:900;margin:8px 0">+600</div><div style="font-size:12px;opacity:.9">Base en croissance</div></div></div></div>
 </div>
-<div class="sec-title">CONTACTS (12 mois)</div>
-<div class="card">
-<div class="title">Nouveaux contacts</div>
-<div class="kpi"><div class="val green">450</div></div>
+</main>
 </div>
-<div class="card">
-<div class="title">Contacts désactivés</div>
-<div class="kpi"><div class="val red">280</div></div>
-</div>
-<div class="card big">
-<div class="title">Balance 12 mois</div>
-<div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap">
-<div style="flex:1;min-width:200px;background:#d1fae5;padding:16px;border-radius:10px;border:2px solid var(--green)"><div style="font-weight:900;margin-bottom:8px;color:#065f46">Entrées <span style="color:var(--green);font-size:20px">(+720)</span></div><div class="mini">120 Nvx comptes</div><div class="mini">600 Comptes MAJ</div></div>
-<div style="flex:1;min-width:200px;background:#fee2e2;padding:16px;border-radius:10px;border:2px solid var(--red)"><div style="font-weight:900;margin-bottom:8px;color:#991b1b">Sorties <span style="color:var(--red);font-size:20px">(-120)</span></div><div class="mini">40 Désactivés</div><div class="mini">80 Nvx dormants</div></div>
-<div style="flex:1;min-width:200px;text-align:center;background:linear-gradient(135deg,var(--green),var(--green-dk));color:#fff;padding:16px;border-radius:10px;box-shadow:0 4px 14px rgba(16,185,129,.4)"><div style="font-weight:900;opacity:.95;font-size:14px">BALANCE</div><div class="val" style="color:#fff;font-size:48px">+600</div><div class="mini" style="opacity:.95;color:#e6fffb">Base en croissance</div></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="ov" id="ovScore" onclick="event.target===this && hide('ovScore')">
-<div class="panel">
-<div class="head"><h3>Score 67/100</h3><button class="close" onclick="hide('ovScore')">Fermer</button></div>
-<div style="display:grid;gap:14px">
-<div><div style="display:flex;justify-content:space-between;font-weight:900;margin-bottom:6px">% Comptes qualifiés 100% <span>62%</span></div><div class="pbar"><div class="pfill" style="width:62%"></div></div></div>
-<div><div style="display:flex;justify-content:space-between;font-weight:900;margin-bottom:6px">% Comptes MAJ (12m) <span>72%</span></div><div class="pbar"><div class="pfill" style="width:72%"></div></div></div>
-<div><div style="display:flex;justify-content:space-between;font-weight:900;margin-bottom:6px">Comptes sans doublon <span>96,5%</span></div><div class="pbar"><div class="pfill" style="width:96.5%"></div></div></div>
-<div><div style="display:flex;justify-content:space-between;font-weight:900;margin-bottom:6px">% Contacts complets <span>65%</span></div><div class="pbar"><div class="pfill" style="width:65%"></div></div></div>
-<div><div style="display:flex;justify-content:space-between;font-weight:900;margin-bottom:6px">% Comptes animés (12m) <span>58%</span></div><div class="pbar"><div class="pfill" style="width:58%"></div></div></div>
-</div>
-</div>
-</div>
-<div class="ov" id="ovList" onclick="event.target===this && hide('ovList')">
-<div class="panel list">
-<div class="head"><h3 id="listTitle">Liste</h3><button class="close" onclick="hide('ovList')">Fermer</button></div>
-<div id="listBody"></div>
-</div>
-</div>
-<div class="tip" id="tip"></div>
 <script>
-document.getElementById('today').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-const comptes=[{nom:"MIKIT",nature:"CMI",type:"CMI",siret:"50054011700032",ip:"IP2",maj:"2025-07-10",visit:"2024-11-29"},{nom:"NEXITY PROMOTION",nature:"MOA",type:"Promoteur",siret:"45303603300254",ip:"IP1",maj:"2025-09-18",visit:"2025-09-05"},{nom:"BET THERMIS",nature:"BET",type:"Thermique",siret:"85331421800012",ip:"IP3",maj:"2023-03-15",visit:"2022-11-03"},{nom:"MAISONS FRANCE",nature:"CMI",type:"CMI",siret:"38254789600123",ip:"IP2",maj:"2025-02-09",visit:"2025-03-01"},{nom:"MOA HABITAT",nature:"MOA",type:"Bailleur",siret:"51987654321098",ip:"IP3",maj:"2021-06-22",visit:"2021-06-22"}];
-const doublons=[{c1:"NEXITY PROMOTION",c2:"NEXITY PROMO",siret:"45303603300254"},{c1:"MAISONS FRANCE",c2:"MFC",siret:"38254789600123"}];
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active')}
-function show(id){document.getElementById(id).classList.add('show')}
-function hide(id){document.getElementById(id).classList.remove('show')}
-function openScore(){show('ovScore')}
-function openList(type){const t=document.getElementById('listTitle');const b=document.getElementById('listBody');if(type==='doublons'){t.textContent='Doublons (35)';b.innerHTML=`<table><thead><tr><th>Compte 1</th><th>Compte 2</th><th>SIRET</th></tr></thead><tbody>${doublons.map(d=>`<tr><td>${d.c1}</td><td>${d.c2}</td><td>${d.siret}</td></tr>`).join('')}</tbody></table>`;show('ovList');return}const mapTitle={actifs:'Comptes actifs (1000)',q_yes:'Qualifiés 100% (620)',q_no:'Non qualifiés (380)',dormants:'Dormants (180)',MOA:'MOA (350)',BET:'BET (420)',CMI:'CMI (230)',an_addr:'Anomalies adresse (42)',an_nat:'Nature manquante (28)',an_typ:'Type manquant (22)',an_sir:'SIRET invalide (28)',animes:'Animés (580)',contacts_actifs:'Contacts actifs (3200)',ct_email:'Email (2816)',ct_mobile:'Mobile (2368)',ct_fonction:'Fonction (2176)',ct_multi:'Multi-comptes (160)',mv_nvx:'Nouveaux comptes (120)',mv_desac:'Désactivés (40)',mv_ct_nvx:'Nouveaux contacts (450)',mv_ct_desac:'Contacts désactivés (280)'};t.textContent=mapTitle[type]||'Liste';let arr=comptes.slice();if(type==='MOA')arr=arr.filter(c=>c.nature==='MOA');if(type==='BET')arr=arr.filter(c=>c.nature==='BET');if(type==='CMI')arr=arr.filter(c=>c.nature==='CMI');if(type==='q_yes')arr=arr.filter((_,i)=>i%2===0);if(type==='q_no')arr=arr.filter((_,i)=>i%2===1);if(type==='dormants')arr=arr.filter(c=>new Date(c.maj)<new Date('2023-01-01'));b.innerHTML=`<table><thead><tr><th>Compte</th><th>Nature</th><th>Type</th><th>SIRET</th><th>IP</th><th>MAJ</th><th>Visite</th></tr></thead><tbody>${arr.map(r=>row(r)).join('')}</tbody></table>`;attachTips();show('ovList')}
-function row(c){const res=encodeURIComponent(`${c.nature} • ${c.type} • ${c.siret}\n${c.ip} • MAJ ${c.maj}\nAction: vérifier data`);return`<tr class="r" data-res="${res}"><td>${c.nom}</td><td>${c.nature}</td><td>${c.type}</td><td>${c.siret}</td><td>${c.ip}</td><td>${c.maj}</td><td>${c.visit}</td></tr>`}
-function attachTips(){const tip=document.getElementById('tip');document.querySelectorAll('.r').forEach(tr=>{tr.addEventListener('mousemove',e=>{tip.textContent=decodeURIComponent(tr.dataset.res);tip.style.left=(e.pageX+12)+'px';tip.style.top=(e.pageY+12)+'px';tip.style.display='block'});tr.addEventListener('mouseleave',()=>tip.style.display='none')})}
+function show(id){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active')}
 </script>
 </body>
 </html>
