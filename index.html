@@ -20,10 +20,11 @@ body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#1e293b;overflow-
 .chip{background:rgba(255,255,255,.2);padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700}
 .main{padding:20px;overflow-y:auto}
 .sec{display:none}
-.sec.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
-.card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:.2s;border-left:4px solid #2563eb}
+.sec.active{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:.2s;border-left:4px solid #2563eb;cursor:pointer}
 .card:hover{box-shadow:0 6px 20px rgba(0,0,0,.15);transform:translateY(-3px)}
 .card.big{grid-column:1/-1}
+.card.sep{border-top:3px solid #10b981;margin-top:10px}
 .label{font-size:11px;font-weight:800;text-transform:uppercase;color:#64748b;letter-spacing:1px;margin-bottom:8px}
 .num{font-size:48px;font-weight:900;color:#2563eb;line-height:1}
 .num.green{color:#10b981}
@@ -45,6 +46,7 @@ body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#1e293b;overflow-
 .modal.show{display:flex}
 .panel{background:#fff;border-radius:16px;padding:30px;width:90%;max-width:700px;max-height:80vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.3)}
 .close{background:#ef4444;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:800;cursor:pointer;float:right}
+.divider{grid-column:1/-1;height:2px;background:linear-gradient(90deg,#10b981,#2563eb);margin:10px 0}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}.side{display:none}.main{padding:12px}.sec.active{grid-template-columns:1fr}}
 </style>
 </head>
@@ -64,32 +66,34 @@ body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#1e293b;overflow-
 <div class="filters">
 <div class="chip">2025</div>
 <div class="chip">Tous Dpts</div>
+<div class="chip">Tous Réseaux</div>
 </div>
 </header>
 <main class="main">
 <div id="syn" class="sec active">
-<div class="card big">
+<div class="card big" onclick="openModal('score')">
 <div class="label">Score qualité NEO DMR</div>
 <div class="num green">67<span style="font-size:28px;color:#64748b"> / 100</span></div>
 <div class="evo up">+9 pts vs 2024</div>
+<div style="font-size:11px;color:#94a3b8;margin-top:8px">🔍 Cliquer pour détails</div>
 </div>
-<div class="card">
+<div class="card" onclick="openModal('actifs')">
 <div class="label">Comptes actifs</div>
 <div class="num">1000</div>
 <div class="evo up">+5%</div>
 <div class="prev">2024: 952</div>
 </div>
-<div class="card">
+<div class="card" onclick="openModal('qualif')">
 <div class="label">Qualifiés 100%</div>
 <div class="num">620<span style="font-size:20px;color:#64748b"> (62%)</span></div>
 <div class="prev">2024: 580 (61%)</div>
 </div>
-<div class="card">
+<div class="card" onclick="openModal('dormants')">
 <div class="label">Dormants</div>
 <div class="num orange">180<span style="font-size:20px;color:#64748b"> (18%)</span></div>
 <div class="prev">2024: 192 (20%)</div>
 </div>
-<div class="card">
+<div class="card" onclick="openModal('doublons')">
 <div class="label">Doublons détectés</div>
 <div class="num red">35<span style="font-size:20px;color:#64748b"> (3.5%)</span></div>
 <div class="prev">2024: 47 (4.9%)</div>
@@ -97,44 +101,55 @@ body{font-family:'Poppins',sans-serif;background:#f8fafc;color:#1e293b;overflow-
 <div class="card big">
 <div class="label">Ventilation par typologie</div>
 <div class="donut"></div>
-<div class="leg"><div class="dot" style="background:#2563eb"></div><div>Maîtrise d'ouvrage</div><div style="font-weight:900">350 (35%)</div></div>
-<div class="leg"><div class="dot" style="background:#10b981"></div><div>Bureaux d'études</div><div style="font-weight:900">420 (42%)</div></div>
-<div class="leg"><div class="dot" style="background:#f59e0b"></div><div>CMI</div><div style="font-weight:900">230 (23%)</div></div>
+<div class="leg" onclick="openModal('moa')"><div class="dot" style="background:#2563eb"></div><div>Maîtrise d'ouvrage</div><div style="font-weight:900">350 (35%)</div></div>
+<div class="leg" onclick="openModal('bet')"><div class="dot" style="background:#10b981"></div><div>Bureaux d'études</div><div style="font-weight:900">420 (42%)</div></div>
+<div class="leg" onclick="openModal('cmi')"><div class="dot" style="background:#f59e0b"></div><div>CMI</div><div style="font-weight:900">230 (23%)</div></div>
 </div>
 </div>
 <div id="cpt" class="sec">
-<div class="card big">
+<div class="card big" onclick="openModal('actifs')">
 <div class="label">Comptes actifs</div>
 <div class="num">1000</div>
 <div class="evo up">+5%</div>
 <div style="margin-top:15px"><span class="badge">RPRC 45%</span><span class="badge">RPRCI 38%</span><span class="badge">IT 17%</span></div>
 </div>
-<div class="card"><div class="label">Adresse renseignée</div><div class="num">87%</div><div class="bar"><div class="fill" style="width:87%"></div></div></div>
-<div class="card"><div class="label">Nature renseignée</div><div class="num">91%</div><div class="bar"><div class="fill" style="width:91%"></div></div></div>
-<div class="card"><div class="label">Type renseigné</div><div class="num">93%</div><div class="bar"><div class="fill" style="width:93%"></div></div></div>
-<div class="card"><div class="label">SIRET renseigné</div><div class="num orange">78%</div><div class="bar"><div class="fill" style="width:78%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div></div>
-<div class="card"><div class="label">Indice proximité</div><div class="num orange">72%</div><div class="bar"><div class="fill" style="width:72%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div></div>
-<div class="card"><div class="label">Comptes animés (12m)</div><div class="num">580<span style="font-size:20px;color:#64748b"> (58%)</span></div></div>
-<div class="card"><div class="label">Durée moy. MAJ</div><div class="num orange">8.5<span style="font-size:20px;color:#64748b"> mois</span></div></div>
+<div class="card" onclick="openModal('adresse')"><div class="label">Adresse renseignée</div><div class="num">87%</div><div class="bar"><div class="fill" style="width:87%"></div></div></div>
+<div class="card" onclick="openModal('nature')"><div class="label">Nature renseignée</div><div class="num">91%</div><div class="bar"><div class="fill" style="width:91%"></div></div></div>
+<div class="card" onclick="openModal('type')"><div class="label">Type renseigné</div><div class="num">93%</div><div class="bar"><div class="fill" style="width:93%"></div></div></div>
+<div class="card" onclick="openModal('siret')"><div class="label">SIRET renseigné</div><div class="num orange">78%</div><div class="bar"><div class="fill" style="width:78%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div></div>
+<div class="card" onclick="openModal('ip')"><div class="label">Indice proximité</div><div class="num orange">72%</div><div class="bar"><div class="fill" style="width:72%;background:linear-gradient(90deg,#f59e0b,#d97706)"></div></div></div>
+<div class="divider"></div>
+<div class="card sep" onclick="openModal('animes')"><div class="label">⚡ Comptes animés (12m)</div><div class="num">580<span style="font-size:20px;color:#64748b"> (58%)</span></div></div>
+<div class="card sep" onclick="openModal('maj')"><div class="label">⏱️ Durée moy. MAJ</div><div class="num orange">8.5<span style="font-size:20px;color:#64748b"> mois</span></div></div>
+<div class="card sep" onclick="openModal('taux')"><div class="label">📊 Taux de mise à jour</div><div class="num">72%</div><div class="bar"><div class="fill" style="width:72%"></div></div></div>
 </div>
 <div id="cnt" class="sec">
-<div class="card big"><div class="label">Contacts actifs</div><div class="num">3200</div><div class="evo up">+9%</div><div class="prev">2024: 2936</div></div>
-<div class="card"><div class="label">Email renseigné</div><div class="num">88%</div><div class="prev">2816/3200</div></div>
-<div class="card"><div class="label">Mobile renseigné</div><div class="num orange">74%</div><div class="prev">2368/3200</div></div>
-<div class="card"><div class="label">Fonction renseignée</div><div class="num orange">68%</div><div class="prev">2176/3200</div></div>
-<div class="card big"><div class="label">Contacts multi-comptes</div><div class="num orange">5%<span style="font-size:20px;color:#64748b"> (160 contacts)</span></div></div>
+<div class="card big" onclick="openModal('contacts')"><div class="label">Contacts actifs</div><div class="num">3200</div><div class="evo up">+9%</div><div class="prev">2024: 2936</div></div>
+<div class="card" onclick="openModal('email')"><div class="label">Email renseigné</div><div class="num">88%</div><div class="prev">2816/3200</div></div>
+<div class="card" onclick="openModal('mobile')"><div class="label">Mobile renseigné</div><div class="num orange">74%</div><div class="prev">2368/3200</div></div>
+<div class="card" onclick="openModal('fonction')"><div class="label">Fonction renseignée</div><div class="num orange">68%</div><div class="prev">2176/3200</div></div>
+<div class="card big" onclick="openModal('multi')"><div class="label">Contacts multi-comptes</div><div class="num orange">5%<span style="font-size:20px;color:#64748b"> (160 contacts)</span></div></div>
 </div>
 <div id="vit" class="sec">
-<div class="card"><div class="label">Nouveaux comptes</div><div class="num green">120</div></div>
-<div class="card"><div class="label">Comptes désactivés</div><div class="num red">40</div></div>
-<div class="card"><div class="label">Nouveaux contacts</div><div class="num green">450</div></div>
-<div class="card"><div class="label">Contacts désactivés</div><div class="num red">280</div></div>
-<div class="card big"><div class="label">Balance 12 mois</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-top:15px"><div style="background:#d1fae5;padding:20px;border-radius:12px;border-left:4px solid #10b981"><div style="font-weight:900;font-size:20px;color:#10b981">+720</div><div style="font-size:13px;color:#065f46;margin-top:5px">120 Nvx + 600 MAJ</div></div><div style="background:#fee2e2;padding:20px;border-radius:12px;border-left:4px solid #ef4444"><div style="font-weight:900;font-size:20px;color:#ef4444">-120</div><div style="font-size:13px;color:#991b1b;margin-top:5px">40 Désac + 80 Dormants</div></div><div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:20px;border-radius:12px;text-align:center"><div style="font-size:14px;font-weight:800;opacity:.9">BALANCE</div><div style="font-size:40px;font-weight:900;margin:8px 0">+600</div><div style="font-size:12px;opacity:.9">Base en croissance</div></div></div></div>
+<div class="card" onclick="openModal('nvxcpt')"><div class="label">Nouveaux comptes</div><div class="num green">120</div></div>
+<div class="card" onclick="openModal('desaccpt')"><div class="label">Comptes désactivés</div><div class="num red">40</div></div>
+<div class="card" onclick="openModal('nvxcnt')"><div class="label">Nouveaux contacts</div><div class="num green">450</div></div>
+<div class="card" onclick="openModal('desaccnt')"><div class="label">Contacts désactivés</div><div class="num red">280</div></div>
+<div class="card big"><div class="label">Balance 12 mois</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:15px"><div style="background:#d1fae5;padding:20px;border-radius:12px;border-left:4px solid #10b981"><div style="font-weight:900;font-size:20px;color:#10b981">+720</div><div style="font-size:13px;color:#065f46;margin-top:5px">120 Nvx + 600 MAJ</div></div><div style="background:#fee2e2;padding:20px;border-radius:12px;border-left:4px solid #ef4444"><div style="font-weight:900;font-size:20px;color:#ef4444">-220</div><div style="font-size:13px;color:#991b1b;margin-top:5px">40 Désac + 180 Dormants</div></div><div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:20px;border-radius:12px;text-align:center"><div style="font-size:14px;font-weight:800;opacity:.9">BALANCE</div><div style="font-size:40px;font-weight:900;margin:8px 0">+500</div><div style="font-size:12px;opacity:.9">Base en croissance</div></div></div></div>
 </div>
 </main>
 </div>
+<div class="modal" id="modal" onclick="event.target===this && closeModal()">
+<div class="panel">
+<button class="close" onclick="closeModal()">Fermer</button>
+<h2 id="modalTitle" style="margin:20px 0 10px 0;font-size:24px;color:#1e40af"></h2>
+<div id="modalContent" style="margin-top:20px"></div>
+</div>
+</div>
 <script>
 function show(id){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active')}
+function openModal(type){const modal=document.getElementById('modal');const title=document.getElementById('modalTitle');const content=document.getElementById('modalContent');const data={score:['Détail du score 67/100','<p style="margin:10px 0"><b>% Comptes qualifiés :</b> 62%</p><p style="margin:10px 0"><b>% Comptes MAJ (12m) :</b> 72%</p><p style="margin:10px 0"><b>Sans doublon :</b> 96.5%</p><p style="margin:10px 0"><b>Contacts complets :</b> 65%</p><p style="margin:10px 0"><b>Comptes animés :</b> 58%</p>'],actifs:['Comptes actifs - 1000','<p>Liste détaillée : NEXITY, MIKIT, BET THERMIS, MOA HABITAT, BOUYGUES...</p><p style="margin-top:15px"><b>Répartition créateurs :</b></p><p>• RPRC : 450 (45%)</p><p>• RPRCI : 380 (38%)</p><p>• IT : 170 (17%)</p>'],dormants:['Comptes dormants - 180','<p><b>Critère :</b> Dernière MAJ > 12 mois</p><p style="margin-top:10px"><b>Action recommandée :</b> Relance commerciale prioritaire</p><p style="margin-top:10px">2024: 192 dormants (-6%)</p>'],doublons:['Doublons - 35 détectés','<p><b>Critère :</b> SIRET + Code Postal identiques</p><p style="margin-top:10px"><b>Action :</b> Fusion des fiches en cours</p><p style="margin-top:10px">2024: 47 doublons (-25%)</p>']};const d=data[type]||['Détail','<p>Informations détaillées à venir...</p>'];title.textContent=d[0];content.innerHTML=d[1];modal.classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
 </script>
 </body>
 </html>
